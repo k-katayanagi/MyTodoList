@@ -37,6 +37,7 @@ const EditForm = ({
         id="editForm"
         onChange={onChange}
         value={editTodo?.title}
+        className="border-2 border-solid border-gray-400 rounded p-2"
       />
       {/* StateOptionコンポーネントに状態変更を渡す */}
       <StateOption onChangeState={handleChangeTodoState} />
