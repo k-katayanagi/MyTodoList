@@ -17,7 +17,9 @@ const StateOption = ({ onChangeState }: StateOptionProps) => {
   };
 
   return (
-    <select onChange={handleStateChange}>
+    <select 
+    onChange={handleStateChange}
+    className="border-2 border-solid border-gray-400 rounded p-2 h-[40px]">
       {StateOptionList.map((item) => (
         <option key={item.state} value={item.state}>
           {item.state}

@@ -14,7 +14,9 @@ interface StateSortOptionType {
   
     return (
       <>
-        <select onChange={(event) => { onChangeState(event) }} className="border-2 border-solid border-gray-400 rounded p-2">
+        <select 
+        onChange={(event) => { onChangeState(event) }} 
+        className="border-2 border-solid border-gray-400 rounded p-2 ml-9">
           {
             stateSortOptionList.map((item) => (
               <option value={item.state} key={item.state}>{item.state}</option>

@@ -20,7 +20,7 @@ const App = () => {
   // selectSortStateが変更されたときに、sortTodoListを更新する
   useEffect(() => {
     const sortedTodos = [...todoList];
-    
+
     switch (selectSortState) {
       case '未完了':
         setSortTodoList(sortedTodos.filter((todo) => todo.state === '未完了'));
@@ -35,7 +35,7 @@ const App = () => {
         setSortTodoList(sortedTodos);
         break;
     }
-  }, [selectSortState,todoList]); // selectSortState`が変更されるたびに実行される
+  }, [selectSortState,todoList]); // selectSortStateが変更されるたびに実行される
 
   const toggleEditMode = (editMode: boolean, todo?: TodoType): void => {
     setIsEditing(editMode);
@@ -66,8 +66,9 @@ const App = () => {
     if (addTodoTitle.length === 0) {
       alert("TODOを入力してください");
       return;
-    }
-    const newId = Math.max(...todoList.map(todo => todo.id), 0) + 1;
+  }
+
+  const newId = Math.max(...todoList.map(todo => todo.id), 0) + 1;
     setTodoList([...todoList, { id: newId, title: addTodoTitle, state: "未完了" }]);
     setAddTodoTitle("");
   };
@@ -80,50 +81,66 @@ const App = () => {
     if (!editTodo || editTodo.title.length === 0) {
       alert("TODOを入力してください");
       return;
-    }
+  }
 
-    const updatedTodoList = todoList.map((todo) =>
-      todo.id === editTodo.id ? { ...todo, title: editTodo.title, state: editTodo.state } : todo
-    );
+  const updatedTodoList = todoList.map((todo) =>
+    todo.id === editTodo.id ? { ...todo, title: editTodo.title, state: editTodo.state } : todo
+  );
 
     setTodoList(updatedTodoList);
     setIsEditing(false);
     setEditTodo(null);
     setIsEditingDone(true);
+
     setTimeout(() => {
       setIsEditingDone(false);
     }, 2000);
   };
 
   return (
-    <div className="flex items-center justify-center h-screen bg-gray-100">
-      <div className="flex flex-col items-center justify-center bg-white p-8 rounded shadow-lg w-[800px]">
-        <div className="flex items-center justify-center w-full mb-10"> {/* 横並びでスペースを調整 */}
-          {isEditing ? (
+    <div className="flex flex-col items-center justify-start min-h-screen bg-gradient-to-r from-pink-300 via-orange-200 to-yellow-200">
+      <div className="flex flex-col items-start justify-center bg-white p-8 rounded shadow-lg w-full max-w-[1300px] mt-10">
+        <div className="flex w-full items-center">
+          <div className="flex w-full justify-center items-start space-x-4"> 
+            <StateSortOption onChangeState={handleUpdateSortState} />
+            {isEditing ? (
             <EditForm
-              onCancel={toggleEditMode}
-              editTodo={editTodo}
-              onChange={handleChangeInputEditTodo}
-              addeditTodo={handleAddEditTodoList}
-              updateState={handleUpdateTodoState}
+            onCancel={toggleEditMode}
+            editTodo={editTodo}
+            onChange={handleChangeInputEditTodo}
+            addeditTodo={handleAddEditTodoList}
+            updateState={handleUpdateTodoState}
             />
-          ) : (
-            <InputForm onAdd={handleAddTodoList} onChange={handleChangeInputAddTodo} addTodoTitle={addTodoTitle} />
-          )}
-          
-          {/* ステータスソートオプションを横並びに配置 */}
-          <StateSortOption onChangeState={handleUpdateSortState} />
+            ) : (
+            <InputForm
+            onAdd={handleAddTodoList}
+            onChange={handleChangeInputAddTodo}
+            addTodoTitle={addTodoTitle}
+            />
+            )}
+          </div>
+      </div>
+
+        {isEditingDone && (
+        <div className="flex justify-center w-full">
+          <p className="text-red-500 font-bold">保存しました</p>
         </div>
-        {isEditingDone ? <p>保存しました</p> : null}
-        <ul className="p-0 mt-4">
-          {sortTodoList.map((todo) => (
-            <li key={todo.id} className="flex justify-between items-center py-2">
-              <span>{todo.title}</span>
-              <span>{todo.state}</span>
-              <button onClick={() => toggleEditMode(true, todo)} className="bg-blue-500 text-white px-2 py-1 rounded mr-2">編集</button>
-              <button onClick={() => handleDeleteTodo(todo)} className="bg-red-500 text-white px-2 py-1 rounded">削除</button>
-            </li>
-          ))}
+        )}
+
+      {/* タイトルとステータスのラベル */}
+        <ul className="p-0 mt-2 w-full">
+          {sortTodoList.length === 0 ? ( 
+          <p className="flex justify-center items-center py-2">TODOがありません</p>
+          ) : (sortTodoList.map((todo) => (
+          <li key={todo.id} className="flex justify-between items-center py-2 border-b">
+            <span className="flex-1">{todo.title}</span>
+            <span className="mx-2">{`:${todo.state}`}</span>
+            <div className="flex items-center space-x-2">
+            <button onClick={() => toggleEditMode(true, todo)} className="bg-[#34d399] text-white px-2 py-1 rounded">編集</button>
+            <button onClick={() => handleDeleteTodo(todo)} className="bg-red-500 text-white px-2 py-1 rounded">削除</button>
+            </div>
+          </li>
+         )))}
         </ul>
       </div>
     </div>

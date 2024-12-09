@@ -31,18 +31,26 @@ const EditForm = ({
 
   return (
     <>
-      <label htmlFor="editForm">編集中</label>
-      <input
+    <div className="flex items-start justify-center mb-7">
+      <div className="flex items-start justify-center m-">
+        <label htmlFor="editForm" className="flex items-center h-[40px] mx-4 ">編集中</label>
+        <input
         type="text"
         id="editForm"
         onChange={onChange}
         value={editTodo?.title}
-        className="border-2 border-solid border-gray-400 rounded p-2"
-      />
-      {/* StateOptionコンポーネントに状態変更を渡す */}
-      <StateOption onChangeState={handleChangeTodoState} />
-      <button onClick={() => { addeditTodo(editTodo); }}>保存</button>
-      <button onClick={() => { onCancel(false); }}>キャンセル</button>
+        className="border-2 border-solid border-gray-400 rounded p-2 h-[40px]"
+        />
+        {/* StateOptionコンポーネントに状態変更を渡す */}
+        <StateOption onChangeState={handleChangeTodoState} />
+        <button 
+        onClick={() => { addeditTodo(editTodo); }}
+        className="bg-blue-500 text-white px-2 py-1 rounded mx-2">保存</button>
+        <button 
+        onClick={() => { onCancel(false); }}
+        className="bg-red-500 text-white px-2 py-1 rounded mx-2">キャンセル</button>
+      </div>
+    </div>
     </>
   );
 };
