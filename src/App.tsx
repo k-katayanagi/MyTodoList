@@ -1,4 +1,5 @@
 import { useEffect, useState } from "react";
+import TodoList from "./components/TodoList";
 import InputForm from "./components/InputForm";
 import EditForm from "./components/EditForm";
 import StateSortOption from "./components/StateSortOption";
@@ -47,55 +48,55 @@ const App = () => {
     }
   };
 
-  const handleUpdateTodoState = (updatedTodo: TodoType): void => {
-    setEditTodo(updatedTodo);
-  };
-
-  const handleChangeInputAddTodo = (event: React.ChangeEvent<HTMLInputElement>): void => {
-    setAddTodoTitle(event.target.value);
-  };
-
-  const handleChangeInputEditTodo = (event: React.ChangeEvent<HTMLInputElement>): void => {
-    const editTodoTitle = event.target.value;
+  //｛handleChangeInputAddTodo｝と｛handleChangeInputEditTodo｝共通化
+  const handleChangeInputTodo = (event: React.ChangeEvent<HTMLInputElement>): void => {
+    const updatedTitle = event.target.value;
     if (editTodo) {
-      setEditTodo({ ...editTodo, title: editTodoTitle });
+      setEditTodo({ ...editTodo, title: updatedTitle });
+    } else {
+      setAddTodoTitle(updatedTitle);
     }
   };
 
-  const handleAddTodoList = (addTodoTitle: string): void => {
-    if (addTodoTitle.length === 0) {
+  //｛handleAddEditTodoList｝と｛ handleAddTodoList｝共通化
+  const handleAddTodoList = (addTodoTitle?: string, editTodo?: TodoType | null):void=> {
+    if (addTodoTitle?.length === 0 && editTodo?.title?.length === 0) {
       alert("TODOを入力してください");
       return;
-  }
+    }
 
-  const newId = Math.max(...todoList.map(todo => todo.id), 0) + 1;
-    setTodoList([...todoList, { id: newId, title: addTodoTitle, state: "未完了" }]);
-    setAddTodoTitle("");
+    if (editTodo) {
+    // 編集の場合
+      const updatedTodoList = todoList.map((todo) =>
+      todo.id === editTodo.id ? { ...todo, title: editTodo.title, state: editTodo.state } : todo
+    );
+      setTodoList(updatedTodoList);
+      //保存メッセージ表示のタイムアウト処理
+      setIsEditingDone(true);
+      setTimeout(() => {
+      setIsEditingDone(false);
+      }, 2000);
+    } else {
+    // 新規追加の場合
+      const newId = Math.max(...todoList.map(todo => todo.id), 0) + 1;
+      setTodoList([...todoList, { id: newId, title: addTodoTitle, state: "未完了" }]);
+    }
+    // 編集モードの終了処理
+    setIsEditing(false);
+    setEditTodo(null);
+  
   };
 
-  const handleDeleteTodo = (deleteTodo: TodoType): void => {
+
+
+    const handleUpdateTodoState = (updatedTodo: TodoType): void => {
+    setEditTodo(updatedTodo);
+    };
+
+    const handleDeleteTodo = (deleteTodo: TodoType): void => {
     setTodoList(todoList.filter(todo => todo.id !== deleteTodo.id));
   };
 
-  const handleAddEditTodoList = (editTodo: TodoType | null): void => {
-    if (!editTodo || editTodo.title.length === 0) {
-      alert("TODOを入力してください");
-      return;
-  }
-
-  const updatedTodoList = todoList.map((todo) =>
-    todo.id === editTodo.id ? { ...todo, title: editTodo.title, state: editTodo.state } : todo
-  );
-
-    setTodoList(updatedTodoList);
-    setIsEditing(false);
-    setEditTodo(null);
-    setIsEditingDone(true);
-
-    setTimeout(() => {
-      setIsEditingDone(false);
-    }, 2000);
-  };
 
   return (
     <div className="flex flex-col items-center justify-start min-h-screen bg-gradient-to-r from-pink-300 via-orange-200 to-yellow-200">
@@ -107,41 +108,25 @@ const App = () => {
             <EditForm
             onCancel={toggleEditMode}
             editTodo={editTodo}
-            onChange={handleChangeInputEditTodo}
-            addeditTodo={handleAddEditTodoList}
+            onChange={handleChangeInputTodo}
+            addeditTodo={handleAddTodoList}
             updateState={handleUpdateTodoState}
             />
             ) : (
             <InputForm
             onAdd={handleAddTodoList}
-            onChange={handleChangeInputAddTodo}
+            onChange={handleChangeInputTodo}
             addTodoTitle={addTodoTitle}
             />
             )}
           </div>
       </div>
-
         {isEditingDone && (
         <div className="flex justify-center w-full">
           <p className="text-red-500 font-bold">保存しました</p>
         </div>
         )}
-
-      {/* タイトルとステータスのラベル */}
-        <ul className="p-0 mt-2 w-full">
-          {sortTodoList.length === 0 ? ( 
-          <p className="flex justify-center items-center py-2">TODOがありません</p>
-          ) : (sortTodoList.map((todo) => (
-          <li key={todo.id} className="flex justify-between items-center py-2 border-b">
-            <span className="flex-1">{todo.title}</span>
-            <span className="mx-2">{`:${todo.state}`}</span>
-            <div className="flex items-center space-x-2">
-            <button onClick={() => toggleEditMode(true, todo)} className="bg-[#34d399] text-white px-2 py-1 rounded">編集</button>
-            <button onClick={() => handleDeleteTodo(todo)} className="bg-red-500 text-white px-2 py-1 rounded">削除</button>
-            </div>
-          </li>
-         )))}
-        </ul>
+        <TodoList todos={sortTodoList} onEdit={toggleEditMode} onDelete={handleDeleteTodo} />
       </div>
     </div>
   );

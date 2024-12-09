@@ -6,7 +6,7 @@ interface EditFormPropsType {
   onCancel: (editMode: boolean) => void;
   editTodo: TodoType | null;
   onChange: (event: any) => void;
-  addeditTodo: (editTodo: TodoType | null) => void;
+  addeditTodo:  (todoTitle?: string, editTodo?: TodoType | null) => void;
   updateState: (updatedTodo: TodoType) => void;
 }
 
@@ -44,7 +44,7 @@ const EditForm = ({
         {/* StateOptionコンポーネントに状態変更を渡す */}
         <StateOption onChangeState={handleChangeTodoState} />
         <button 
-        onClick={() => { addeditTodo(editTodo); }}
+        onClick={() => { addeditTodo(editTodo?.title,editTodo); }}
         className="bg-blue-500 text-white px-2 py-1 rounded mx-2">保存</button>
         <button 
         onClick={() => { onCancel(false); }}

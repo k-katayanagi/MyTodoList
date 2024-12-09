@@ -1,6 +1,6 @@
 export interface TodoType {
     id:number,
-    title:string,
+    title?:string,
     state: '未完了' | '進行中' | '完了'
   }
 
