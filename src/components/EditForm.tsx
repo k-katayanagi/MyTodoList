@@ -39,7 +39,8 @@ const EditForm = ({
         value={editTodo?.title}
       />
       {/* StateOptionコンポーネントに状態変更を渡す */}
-      <StateOption onChangeState={handleChangeTodoState} />
+      <StateOption onChangeState={handleChangeTodoState} 
+       currentState={todoState}/>
       <button onClick={() => { addeditTodo(editTodo); }}>保存</button>
       <button onClick={() => { onCancel(false); }}>キャンセル</button>
     </>
