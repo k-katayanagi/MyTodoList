@@ -2,6 +2,7 @@ import { TodoType } from "../types";
 
 interface StateOptionProps {
   onChangeState: (stateValue: TodoType["state"]) => void;
+  currentState?: "未完了"|"進行中"| "完了"
 }
 
 const StateOption = ({ onChangeState }: StateOptionProps) => {

@@ -48,7 +48,10 @@ const EditForm = ({
             className="border-2 border-solid border-gray-400 rounded p-2 h-[40px]"
           />
           {/* StateOptionコンポーネントに状態変更を渡す */}
-          <StateOption onChangeState={handleChangeTodoState} />
+          <StateOption 
+          onChangeState={handleChangeTodoState}
+          currentState={todoState} // todoStateを渡して現在の状態を表示
+          />
           <button
             onClick={() => {
               addeditTodo(editTodo?.title, editTodo);
