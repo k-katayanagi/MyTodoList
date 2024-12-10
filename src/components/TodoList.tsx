@@ -19,8 +19,9 @@ const TodoList = ({ todos, onEdit, onDelete }: TodoListType) => {
       {todos.map((todo) => (
         <li
           key={todo.id}
-          className="flex justify-between items-center py-2 border-b"
-        >
+          className="flex justify-center items-center py-2 border-b"
+          >
+          <span className="flex-1 text-center">{todo.id}</span>
           <span className="flex-1">{todo.title}</span>
           <span className="mx-2">{`:${todo.state}`}</span>
           <div className="flex items-center space-x-2">
